@@ -3,7 +3,7 @@ from myutils import my_file_name_model
 from CIFARS.mycifar100 import my_load_data
 from keras.utils import to_categorical
 import sys
-from keras.models import load_model
+from tensorflow.keras.models import load_model
 import argparse
 from keras.datasets import cifar10
 import os
