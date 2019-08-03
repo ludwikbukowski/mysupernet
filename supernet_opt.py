@@ -83,7 +83,7 @@ def load_engine():
     # r=root, d=directories, f = files
     for r, d, f in os.walk(enginedir):
         for file in f:
-            if '.hdf5' in file:
+            if '.h5' in file:
                 file_name = os.path.join(r, file)
                 model = load_model(file_name)
                 print('>loaded %s' % file_name)

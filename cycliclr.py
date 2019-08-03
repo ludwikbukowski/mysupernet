@@ -30,16 +30,18 @@ class MyCyclic(Callback):
         Original paper: https://arxiv.org/abs/1506.01186
     '''
 
-    def __init__(self, cycle = 4, min_lr=1e-2, max_lr=1e-5, epochs=None):
+    def __init__(self, steps_per_epoch, cycle = 4, min_lr=1e-2, max_lr=1e-5):
         super().__init__()
 
         self.min_lr = min_lr
         self.max_lr = max_lr
         self.cycle = cycle
-        self.total_iterations = 0
+        self.total_iterations = steps_per_epoch
         self.iteration = 0
         self.epoch = 0
+        self.current_lr = 0
         self.history = {}
+        print("steps per epochs is " + str(steps_per_epoch))
 
     def schedule_lr(self, iter, epoch, cycle, alpha_1, alpha_2):
         t = ((epoch % cycle) + iter) / cycle
@@ -58,6 +60,7 @@ class MyCyclic(Callback):
         logs = logs or {}
 
     def on_epoch_begin(self, epoch, logs=None):
+        # print(" [EPOCH] Learning rate is " + str(self.current_lr))
         self.epoch += 1
         self.iteration = 1
 
@@ -66,10 +69,10 @@ class MyCyclic(Callback):
         self.total_iterations = self.iteration
 
     def on_batch_begin(self, epoch, logs=None):
-        if(self.total_iterations != 0):
-            newlr = self.clr()
-            # print("my lr was " + str(K.eval(self.model.optimizer.lr)))
-            K.set_value(self.model.optimizer.lr, newlr)
+        newlr = self.clr()
+        # print("[BATCH] Learning rate is " + str(newlr))
+        self.current_lr = newlr
+        K.set_value(self.model.optimizer.lr, newlr)
         self.iteration += 1
 
         # self.history.setdefault('lr', []).append(K.get_value(self.model.optimizer.lr))
