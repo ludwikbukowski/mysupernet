@@ -100,7 +100,10 @@ model.add(Dropout(0.4))
 model.add(Flatten())
 model.add(Dense(num_classes, activation='softmax'))
 
+
+from keras.utils import plot_model
 model.summary()
+plot_model(model, to_file='sample_model.png',show_shapes=True, show_layer_names=True)
 # initiate RMSprop optimizer
 if(opt=="adam"):
     opt = "adam"

@@ -23,7 +23,7 @@ class MyCyclic(Callback):
         min_lr: The lower bound of the learning rate range for the experiment.
         max_lr: The upper bound of the learning rate range for the experiment.
         steps_per_epoch: Number of mini-batches in the dataset. Calculated as `np.ceil(epoch_size/batch_size)`.
-        epochs: Number of epochs to run experiment. Usually between 2 and 4 epochs is sufficient.
+        epochs: Number of epochs to run experiment. Usually between 2 and dir4 epochs is sufficient.
 
     # References
         Blog post: jeremyjordan.me/nn-learning-rate
