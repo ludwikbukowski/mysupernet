@@ -139,6 +139,7 @@ def train_chosen(model, base, x_train, x_test, y_train, y_test, index):
     totrain.fit(x_train_new2, y_train,
                  batch_size=batch_size,
                  epochs=epochs,
+                 verbose=2,
                  validation_data=(x_test_new2, y_test),
                  callbacks=[csv_logger])
 
