@@ -31,30 +31,17 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--epochs', '-e', help="numer of epochs to iterate", type= int, default=100)
 parser.add_argument('--batch-size', '-b', help="batch size", type= int, default=32)
 parser.add_argument('--prefix', '-p', help="name for directory with results", type=str, default='model')
-parser.add_argument('--reduce', '-r', help="how many training data is taken", type=float, default=1)
-parser.add_argument('--datadog', '-d', help="how metrics will be named", type=str, default='train100_improved')
 parser.add_argument('--stopat', '-s', help="stop when accuracy achived", type=float, default=0.9)
 parser.add_argument('--notes', '-n', help="additional notes included in final raport", type=str, default='no notes')
-parser.add_argument('--opt', '-o', help="optimizer", type=str, default='adam')
 args = parser.parse_args()
 
 batch_size = args.batch_size
 epochs = args.epochs
 data_augmentation = True
-reduce = args.reduce
-datadogname = args.datadog
 notes = args.notes
-opt = args.opt
 stopat = args.stopat
 num_classes = 10
 model_name = my_file_name_model()
-
-print('------------')
-print('batch_size: ' + str(batch_size))
-print('epochs: ' + str(epochs))
-print('optimizer: ' + str(opt))
-print('data used: ' + str(reduce * 100) + '%')
-print('------------')
 
 # The data, split between train and test sets:
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -118,12 +105,10 @@ model.add(Dense(num_classes, activation='softmax'))
 
 
 from keras.utils import plot_model
-model.summary()
-plot_model(model, to_file='sample_model.png',show_shapes=True, show_layer_names=True)
 # initiate RMSprop optimizer
 
 opt_rms = keras.optimizers.rmsprop(lr=0.001,decay=1e-6)
-model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=opt_rms, metrics=['accuracy'])
 
 history = []
 

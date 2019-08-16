@@ -180,6 +180,7 @@ def define_chosen(oldmodel, index, conv_indexes, trinable_indexes):
     for i in trinable_indexes[:trinable_indexes.index(indexed_layer)+1]:
         model._layers[i].set_weights(oldmodel.layers[i].get_weights())
 
+
     return model
 
 # def train_single_chosen(model, base, x_train, x_test, y_train, y_test, index):
