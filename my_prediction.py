@@ -7,7 +7,7 @@ from tensorflow.keras.models import load_model
 import argparse
 from tensorflow.keras.datasets import cifar10
 import os
-
+import numpy as np
 parameters_passed = sys.argv[1:]
 parser = argparse.ArgumentParser()
 parser.add_argument('--dir', dest='enginedir', default='engine')
