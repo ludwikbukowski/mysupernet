@@ -136,8 +136,14 @@ def define_supernet(members, new_training_set):
 
 (names, members) = load_engine()
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+
+mean = np.mean(x_train,axis=(0,1,2,3))
+std = np.std(x_train,axis=(0,1,2,3))
+x_train = (x_train-mean)/(std+1e-7)
+x_test = (x_test-mean)/(std+1e-7)
+
 (x_train, y_train) = shuffle_and_reduce(reduce_percent, x_train, y_train)
 y_test = to_categorical(y_test)
 y_train = to_categorical(y_train)
