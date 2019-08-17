@@ -14,8 +14,12 @@ parser.add_argument('--dir', dest='enginedir', default='engine')
 args = parser.parse_args()
 enginedir = args.enginedir
 (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-x_train = x_train.astype('float32') / 255
-x_test = x_test.astype('float32') / 255
+x_train = x_train.astype('float32')
+x_test = x_test.astype('float32')
+mean = np.mean(x_train,axis=(0,1,2,3))
+std = np.std(x_train,axis=(0,1,2,3))
+x_train = (x_train-mean)/(std+1e-7)
+x_test = (x_test-mean)/(std+1e-7)
 
 def load_engine():
     models = []
