@@ -126,6 +126,7 @@ def train_chosen(model, base, x_train, x_test, y_train, y_test, index):
     totrain.fit(x_train_new2, y_train,
                  batch_size=batch_size,
                  epochs=epochs,
+                 verbose=2,
                  validation_data=(x_test_new2, y_test),
                  callbacks=[csv_logger])
 
@@ -205,7 +206,7 @@ x_train, x_test = vgg_normalize(x_train, x_test )
 y_test = to_categorical(y_test, 100)
 y_train = to_categorical(y_train, 100)
 
-scores = model.evaluate(x_test, y_test, verbose=1)
+scores = model.evaluate(x_test, y_test, verbose=2)
 print('Test loss:', scores[0])
 print('Test accuracy:', scores[1])
 
