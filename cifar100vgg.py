@@ -206,7 +206,8 @@ class cifar100vgg:
                                          batch_size=batch_size),
                             steps_per_epoch=x_train.shape[0] // batch_size,
                             epochs=maxepoches,
-                            validation_data=(x_test, y_test),callbacks=[reduce_lr, checkpoint, csv_logger],verbose=1)
+
+                            validation_data=(x_test, y_test),callbacks=[reduce_lr, checkpoint, csv_logger],verbose=2)
         model.save('from_github_vgg100.h5')
         return model
 
