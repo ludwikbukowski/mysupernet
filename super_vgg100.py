@@ -177,7 +177,7 @@ def define_chosen(oldmodel, index, conv_indexes, trinable_indexes):
     return model
 
 
-def vgg_normalize(self, X_train, X_test):
+def vgg_normalize(X_train, X_test):
     # this function normalize inputs for zero mean and unit variance
     # it is used when training a model.
     # Input: training set and test set
