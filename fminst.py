@@ -170,7 +170,8 @@ def define_submodel(member, total, index, opt):
     submodel.summary()
     return submodel
 
-model = load_model("fminst_" + str(epochs1)+"_tmp.h5")
+if(trainroot!=0):
+    model = load_model("fminst_" + str(epochs1)+"_tmp.h5")
 
 if(trainsubs!=0):
     subs = []
