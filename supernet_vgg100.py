@@ -12,7 +12,7 @@ from keras.layers.merge import concatenate
 from tensorflow.keras.utils import plot_model
 from numpy import argmax
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.datasets import cifar10
+from tensorflow.keras.datasets import cifar100
 import keras
 import numpy as np
 from keras.layers.merge import concatenate
@@ -146,7 +146,7 @@ def vgg_normalize(X_train, X_test):
 
 
 (names, members) = load_engine()
-(x_train, y_train), (x_test, y_test) = cifar10.load_data()
+(x_train, y_train), (x_test, y_test) = cifar100.load_data()
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 x_train, x_test = vgg_normalize(x_train, x_test )
