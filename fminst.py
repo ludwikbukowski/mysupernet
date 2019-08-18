@@ -91,7 +91,7 @@ checkpoint1 = keras.callbacks.ModelCheckpoint(filepath1, monitor='val_acc', verb
 if(trainroot != 0):
     print("-------------------------------")
     print("Training Root...")
-    checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_tmp.h5', save_best_only=False, monitor='val_acc', mode='max',
+    checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_{epoch:02d}_tmp.h5', save_best_only=False, monitor='val_acc', mode='max',
                                  period=epochs1, verbose=1)
     csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
     hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger,checkpoint])
@@ -165,7 +165,7 @@ def define_submodel(member, total, index, opt):
     # submodel.summary()
     return submodel
 
-model = load_model("fminst_tmp.h5")
+model = load_model("fminst_" + str(epochs1)+"_tmp.h5")
 
 if(trainsubs!=0):
     subs = []
