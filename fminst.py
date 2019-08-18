@@ -75,6 +75,7 @@ model = Sequential()
 model.add(Dense(900, input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.25))
 model.add(Dense(3000  , activation = "relu"))
+model.add(Dropout(0.25))
 model.add(Dense(3000  , activation = "relu"))
 model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
@@ -124,6 +125,7 @@ def define_submodel(member, total, index, opt):
     new_weights = new_weights.reshape((inp, part))
     densefirst = Dense(part, activation=member.layers[0].activation, input_dim=inp, weights=[new_weights, first_bias[0:part]])
     submodel.add(densefirst)
+    submodel.add(Dropout(0.25))
 
     ## hidden layers
     # model.summary()
