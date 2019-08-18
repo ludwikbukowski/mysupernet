@@ -67,6 +67,7 @@ def vgg_normalize(X_train, X_test):
     X_train = (X_train - mean) / (std + 1e-7)
     X_test = (X_test - mean) / (std + 1e-7)
     return X_train, X_test
+
 # The data, split between train and test sets:
 (x_train, y_train), (x_test, y_test) = cifar100.load_data()
 x_train = x_train.astype('float32')
