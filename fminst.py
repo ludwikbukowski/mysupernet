@@ -15,7 +15,6 @@ from keras.models import load_model
 from keras.layers.merge import concatenate
 from myutils import final_plot
 import random
-from mygen import BatchGenerator
 import numpy as np
 from keras.callbacks import CSVLogger
 from myutils import gen_save_dir
