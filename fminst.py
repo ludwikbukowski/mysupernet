@@ -24,7 +24,7 @@ parser.add_argument('--trainsuper', '-t', help="train subs", type= int, default=
 parser.add_argument('--epochs1', '-e', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs2', '-q', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs3', '-w', help="numer of epochs to iterate", type= int, default=20)
-parser.add_argument('--epochs4', '-g', help="numer of epochs to iterate", type= int, default=20)
+parser.add_argument('--epochs4', '-c', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--alldata', '-a', help="numer of epochs to iterate", type= int, default=1)
 parser.add_argument('--stopat1', '-g', help="numer of epochs to iterate", type= float, default=0.95)
 parser.add_argument('--stopat2', '-l', help="numer of epochs to iterate", type= float, default=0.95)
