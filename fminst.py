@@ -10,6 +10,7 @@ import os
 import argparse
 import sys
 import pandas as pd
+from keras.models import clone_model
 from keras.models import load_model
 from myutils import final_plot
 import random
@@ -88,6 +89,8 @@ ter1 = TerminateOnBaseline(monitor='val_acc', baseline=stopat1)
 filepath1 = save_dir + "/saved-model_fminst-root-{epoch:02d}-{val_acc:.2f}.h5"
 checkpoint1 = keras.callbacks.ModelCheckpoint(filepath1, monitor='val_acc', verbose=2, save_best_only=False)
 
+saved = clone_model(model)
+saved.set_weights(model.get_weights())
 
 if(trainroot != 0):
     print("-------------------------------")
@@ -171,13 +174,13 @@ def define_submodel(member, total, index, opt):
     return submodel
 
 if(trainroot!=0):
-    model = load_model("fminst_" + str(epochs1)+"_tmp.h5")
+        saved = load_model("fminst_" + str(epochs1)+"_tmp.h5")
 
 if(trainsubs!=0):
     subs = []
     opts = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
     for i,s in enumerate(range(n_subs)):
-        sub = define_submodel(model, n_subs, s, 'adam')
+        sub = define_submodel(saved, n_subs, s, 'adam')
         subs.append(sub)
 
 # plot_model(sub0, show_shapes=True, to_file='sub0.png')
