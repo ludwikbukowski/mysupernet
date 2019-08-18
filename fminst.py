@@ -73,10 +73,10 @@ supernet_part = 0.1
 print(str(input_dim))
 model = Sequential()
 model.add(Dense(900, input_dim=input_dim, activation = "relu"))
-# model.add(Dropout(0.25))
+model.add(Dropout(0.25))
 model.add(Dense(3000  , activation = "relu"))
 model.add(Dense(3000  , activation = "relu"))
-# model.add(Dropout(0.25))
+model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
@@ -137,14 +137,16 @@ def define_submodel(member, total, index, opt):
         start_at2 = index * part2
         end_at2 = start_at2 + part2
 
-        new_weights = np.array([])
-        weights, bias = l.get_weights()
-        for w in weights[start_at1:end_at1]:
-            new_w = np.array(w[start_at2:end_at2])
-            new_weights = np.append(new_weights, new_w)
-        new_weights = new_weights.reshape((part1, part2))
-        dense = Dense(part2, activation=l.activation,weights=[new_weights, bias[start_at2:end_at2]])
-        submodel.add(dense)
+        layer_type = type(l).__name__
+        if (layer_type == 'Conv2D' or layer_type == 'Dense'):
+            new_weights = np.array([])
+            weights, bias = l.get_weights()
+            for w in weights[start_at1:end_at1]:
+                new_w = np.array(w[start_at2:end_at2])
+                new_weights = np.append(new_weights, new_w)
+            new_weights = new_weights.reshape((part1, part2))
+            dense = Dense(part2, activation=l.activation,weights=[new_weights, bias[start_at2:end_at2]])
+            submodel.add(dense)
 
     ## last layer
     last_weights, last_bias = member.layers[-1].get_weights()
@@ -162,7 +164,7 @@ def define_submodel(member, total, index, opt):
     lastlayer = Dense(nb_classes, activation=member.layers[-1].activation, weights=[new_weights, last_bias])
     submodel.add(lastlayer)
     submodel.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['acc'])
-    # submodel.summary()
+    submodel.summary()
     return submodel
 
 model = load_model("fminst_" + str(epochs1)+"_tmp.h5")
