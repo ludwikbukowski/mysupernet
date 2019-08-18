@@ -73,6 +73,7 @@ model = Sequential()
 model.add(Dense(900, input_dim=input_dim, activation = "relu"))
 # model.add(Dropout(0.25))
 model.add(Dense(3000  , activation = "relu"))
+model.add(Dense(3000  , activation = "relu"))
 # model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
