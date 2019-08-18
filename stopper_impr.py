@@ -110,6 +110,7 @@ from keras.utils import plot_model
 opt_rms = keras.optimizers.rmsprop(lr=0.001,decay=1e-6)
 model.compile(loss='categorical_crossentropy', optimizer=opt_rms, metrics=['accuracy'])
 
+model.summary()
 history = []
 
 if not data_augmentation:

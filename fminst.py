@@ -180,10 +180,9 @@ if(trainsubs !=0):
         filepath_x = save_dir + "/saved-model_fminst-sub" + str(i) + "-{epoch:02d}-{val_acc:.2f}.h5"
         checkpoint_x = keras.callbacks.ModelCheckpoint(filepath_x, monitor='val_acc', verbose=2, save_best_only=False)
         csv_logger_x = CSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', append=True, separator=';')
-        s.fit(x_train, y_train, nb_epoch=epochs2, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter2, csv_logger_x
-            # ,
-                                                                                                                                     # checkpoint_x
-                                                                                                                                     ])
+        s.fit(x_train, y_train, nb_epoch=epochs2, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2,
+              initial_epoch=epochs1,
+              callbacks = [ter2, csv_logger_x])
     print("Submodels trained.")
 
 # print("-------Evaluation base model")
@@ -249,6 +248,7 @@ if(trainsuper!=0):
     csv_logger = CSVLogger(save_dir + '/history_super' + str(i) + '.csv', append=True, separator=';')
     supernet.fit(x_train_new, y_train,
               batch_size=int(batch_size),
+                 initial_epoch=epochs2,
           epochs=epochs3,
           verbose=2,
           validation_data=(x_testing_new, y_test),
