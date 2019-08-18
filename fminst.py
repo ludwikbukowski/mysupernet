@@ -94,6 +94,7 @@ if(trainroot != 0):
     csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
     hist = model.fit(x_train, y_train, nb_epoch=epochs3, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger,checkpoint])
     print("Root trained.")
+    model.summary()
     # final_plot(hist, "tmp.png")
 
 
@@ -255,6 +256,7 @@ if(trainsuper!=0):
           verbose=2,
           validation_data=(x_testing_new, y_test),
           callbacks=[ter3,csv_logger])
+    supernet.summary()
     print("SuperModel trained")
 
     # scores = supernet.evaluate(x_testing_new, y_test, verbose=2)
