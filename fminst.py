@@ -13,6 +13,7 @@ import pandas as pd
 from myutils import final_plot
 import random
 import numpy as np
+from keras.callbacks import CSVLogger
 from myutils import gen_save_dir
 from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
@@ -86,7 +87,8 @@ checkpoint1 = keras.callbacks.ModelCheckpoint(filepath1, monitor='val_acc', verb
 if(trainroot != 0):
     print("-------------------------------")
     print("Training Root...")
-    hist = model.fit(x_train, y_train, nb_epoch=epochs1, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1
+    csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
+    hist = model.fit(x_train, y_train, nb_epoch=epochs1, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger
         # ,
                                                                                                                                      # checkpoint1
                                                                                                                                      ])
@@ -177,7 +179,8 @@ if(trainsubs !=0):
         print("-------------------------------")
         filepath_x = save_dir + "/saved-model_fminst-sub" + str(i) + "-{epoch:02d}-{val_acc:.2f}.h5"
         checkpoint_x = keras.callbacks.ModelCheckpoint(filepath_x, monitor='val_acc', verbose=2, save_best_only=False)
-        s.fit(x_train, y_train, nb_epoch=epochs2, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter2
+        csv_logger_x = CSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', append=True, separator=';')
+        s.fit(x_train, y_train, nb_epoch=epochs2, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter2, csv_logger_x
             # ,
                                                                                                                                      # checkpoint_x
                                                                                                                                      ])
@@ -243,12 +246,13 @@ if(trainsuper!=0):
     supernet = define_supernet(subs, x_testing_new)
     # supernet.summary()
     ter3 = TerminateOnBaseline(monitor='val_acc', baseline=stopat3)
+    csv_logger = CSVLogger(save_dir + '/history_super' + str(i) + '.csv', append=True, separator=';')
     supernet.fit(x_train_new, y_train,
               batch_size=int(batch_size),
           epochs=epochs3,
           verbose=2,
           validation_data=(x_testing_new, y_test),
-          callbacks=[ter3])
+          callbacks=[ter3,csv_logger])
     print("SuperModel trained")
 
     # scores = supernet.evaluate(x_testing_new, y_test, verbose=2)
