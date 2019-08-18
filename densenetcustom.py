@@ -161,7 +161,7 @@ history = model.fit_generator(
     datagen_train.flow(x_train, y_train, batch_size=batch_size),
     steps_per_epoch=(len(x_train)/batch_size)*5,
     epochs=epochs,
-    verbose = 1,
+    verbose = 2,
     validation_data=(x_val, y_val),
     callbacks = [lr_scheduler, csv_logger, model_chkpt]
 )
