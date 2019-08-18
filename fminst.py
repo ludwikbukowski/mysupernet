@@ -147,6 +147,7 @@ def define_submodel(member, total, index, opt):
             new_weights = new_weights.reshape((part1, part2))
             dense = Dense(part2, activation=l.activation,weights=[new_weights, bias[start_at2:end_at2]])
             submodel.add(dense)
+            submodel.add(Dropout(0.25))
 
     ## last layer
     last_weights, last_bias = member.layers[-1].get_weights()
