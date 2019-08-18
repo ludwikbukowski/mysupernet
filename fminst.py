@@ -40,6 +40,7 @@ trainsuper = args.trainsuper
 epochs1 = args.epochs1
 epochs2 = args.epochs2
 epochs3 = args.epochs3
+epochs4 = args.epochs4
 alldata = args.alldata
 stopat1 = args.stopat1
 stopat2 = args.stopat2
