@@ -12,8 +12,10 @@ import sys
 import pandas as pd
 from keras.models import clone_model
 from keras.models import load_model
+from keras.layers.merge import concatenate
 from myutils import final_plot
 import random
+from mygen import BatchGenerator
 import numpy as np
 from keras.callbacks import CSVLogger
 from myutils import gen_save_dir
@@ -23,6 +25,7 @@ parser.add_argument('--branch', '-d', help="branch from root", type= int, defaul
 parser.add_argument('--trainroot', '-r', help="train root net", type= int, default=1)
 parser.add_argument('--trainsubs', '-s', help="train subs", type= int, default=1)
 parser.add_argument('--trainsuper', '-t', help="train subs", type= int, default=1)
+parser.add_argument('--trainsuperall', '-f', help="train subs", type= int, default=0)
 parser.add_argument('--epochs1', '-e', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs2', '-q', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs3', '-w', help="numer of epochs to iterate", type= int, default=20)
@@ -40,6 +43,7 @@ branch = args.branch
 trainroot = args.trainroot
 trainsubs = args.trainsubs
 trainsuper = args.trainsuper
+trainsuperall = args.trainsuperall
 epochs1 = args.epochs1
 epochs2 = args.epochs2
 epochs3 = args.epochs3
@@ -254,6 +258,40 @@ def define_supernet(members, new_training_set):
     return model
 
 
+def define_stacked_model(members, final_class_num):
+  print(members)
+  last_layer_weights = np.array([], ndmin=2)
+  biases = []
+  dims = 0
+  for i in range(len(members)):
+      model = members[i]
+      model.name = '_' + str(i+1) + '_' + model.name
+      for layer in model._layers:
+          layer.trainable = True
+          layer.name = 'ensemble_' + str(i+1) + '_' + layer.name
+      lastlayer = model._layers.pop()
+      weights = lastlayer.get_weights()[0]
+      (dim_val, final_class_num) = weights.shape
+      dims += dim_val
+      last_layer_weights = np.append(last_layer_weights, weights)
+      bias = lastlayer.get_weights()[1]
+      biases.append(bias)
+  last_layer_weights = last_layer_weights.reshape((dims, final_class_num))
+  ensemble_visible = [model.input for model in members]
+  ensemble_outputs = [model.layers[-1].output for model in members]
+  merge = concatenate(ensemble_outputs)
+  output = Dense(final_class_num, activation='softmax'
+                 )(merge)
+  # last_layer_weights
+  model = Model(inputs=ensemble_visible,  outputs=output)
+  model._layers[-1].set_weights([last_layer_weights, np.mean(biases, axis = 0)])
+  # below ignored for now
+  model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  model.summary()
+
+  return model
+
+
 
 if(trainsuper!=0):
     print("-------------------------------")
@@ -276,4 +314,19 @@ if(trainsuper!=0):
     # scores = supernet.evaluate(x_testing_new, y_test, verbose=2)
     # print('Test loss:', scores[0])
     # print('Test accuracy:', scores[1])
+
+if(trainsuperall!=0):
+    supernet = define_stacked_model(subs, 10)
+    x_test = [x_test for _ in range(len(supernet.input))]
+    x_train = [x_train for _ in range(len(supernet.input))]
+    csv_logger = CSVLogger(save_dir + '/history_super.csv', append=True, separator=';')
+    supernet.fit(x_train, y_train,
+                 batch_size=int(batch_size),
+                 initial_epoch=epochs2,
+                 epochs=epochs3,
+                 verbose=2,
+                 validation_data=(x_test, y_test),
+                 callbacks=[csv_logger])
+    supernet.summary()
+    print("SuperModel All trained")
 
