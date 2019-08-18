@@ -24,6 +24,7 @@ parser.add_argument('--trainsuper', '-t', help="train subs", type= int, default=
 parser.add_argument('--epochs1', '-e', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs2', '-q', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--epochs3', '-w', help="numer of epochs to iterate", type= int, default=20)
+parser.add_argument('--epochs4', '-w', help="numer of epochs to iterate", type= int, default=20)
 parser.add_argument('--alldata', '-a', help="numer of epochs to iterate", type= int, default=1)
 parser.add_argument('--stopat1', '-g', help="numer of epochs to iterate", type= float, default=0.95)
 parser.add_argument('--stopat2', '-l', help="numer of epochs to iterate", type= float, default=0.95)
@@ -92,7 +93,7 @@ if(trainroot != 0):
     checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_tmp.h5', save_best_only=False, monitor='val_acc', mode='max',
                                  period=epochs1, verbose=1)
     csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
-    hist = model.fit(x_train, y_train, nb_epoch=epochs3, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger,checkpoint])
+    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger,checkpoint])
     print("Root trained.")
     model.summary()
     # final_plot(hist, "tmp.png")
