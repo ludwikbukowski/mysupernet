@@ -82,8 +82,8 @@ model.add(Dense(300, input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.25))
 model.add(Dense(3000  , activation =     "relu"))
 model.add(Dropout(0.25))
-model.add(Dense(3000  , activation = "relu"))
-model.add(Dropout(0.25))
+# model.add(Dense(3000  , activation = "relu"))
+# model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
