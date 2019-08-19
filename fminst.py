@@ -78,11 +78,11 @@ supernet_part = 0.1
 
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(900, input_dim=input_dim, activation = "relu"))
+model.add(Dense(60, input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.25))
-model.add(Dense(3000  , activation = "relu"))
+model.add(Dense(600  , activation = "relu"))
 model.add(Dropout(0.25))
-model.add(Dense(3000  , activation = "relu"))
+model.add(Dense(600  , activation = "relu"))
 model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
