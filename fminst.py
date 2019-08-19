@@ -78,12 +78,10 @@ supernet_part = 0.1
 
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(300, input_dim=input_dim, activation = "relu"))
-model.add(Dropout(0.25))
-model.add(Dense(3000  , activation =     "relu"))
-model.add(Dropout(0.25))
-# model.add(Dense(3000  , activation = "relu"))
-# model.add(Dropout(0.25))
+model.add(Dense(258, input_dim=input_dim, activation = "relu"))
+model.add(Dropout(0.3))
+model.add(Dense(126  , activation =     "relu"))
+model.add(Dropout(0.2))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
