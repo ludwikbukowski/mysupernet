@@ -87,7 +87,7 @@ model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='categorical_crossentropy', optimizer='nesterov', metrics=['acc'])
 model.summary()
 
 ter1 = TerminateOnBaseline(monitor='val_acc', baseline=stopat1)
@@ -189,9 +189,9 @@ if(trainroot!=0):
 
 if(trainsubs!=0):
     subs = []
-    opts     = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
+    # opts     = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
     for i,s in enumerate(range(n_subs)):
-        sub = define_submodel(saved, n_subs, s, 'adam')
+        sub = define_submodel(saved, n_subs, s, 'nesterov')
         subs.append(sub)
 
 # plot_model(sub0, show_shapes=True, to_file='sub0.png')
@@ -290,7 +290,7 @@ def define_stacked_model(members, final_class_num):
   model = Model(inputs=ensemble_visible,  outputs=output)
   model._layers[-1].set_weights([last_layer_weights, np.mean(biases, axis = 0)])
   # below ignored for now
-  model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  model.compile(loss='categorical_crossentropy', optimizer='nesterov', metrics=['accuracy'])
   model.summary()
 
   return model
