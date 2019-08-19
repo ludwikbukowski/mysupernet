@@ -78,17 +78,17 @@ supernet_part = 0.1
 
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(120, input_dim=input_dim, activation = "relu"))
+model.add(Dense(300, input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.25))
-model.add(Dense(1200  , activation = "relu"))
+model.add(Dense(3000  , activation =     "relu"))
 model.add(Dropout(0.25))
-model.add(Dense(1200  , activation = "relu"))
+model.add(Dense(3000  , activation = "relu"))
 model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
-# model.summary()
+model.summary()
 
 ter1 = TerminateOnBaseline(monitor='val_acc', baseline=stopat1)
 filepath1 = save_dir + "/saved-model_fminst-root-{epoch:02d}-{val_acc:.2f}.h5"
@@ -184,7 +184,7 @@ if(trainroot!=0):
 
 if(trainsubs!=0):
     subs = []
-    opts = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
+    opts     = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
     for i,s in enumerate(range(n_subs)):
         sub = define_submodel(saved, n_subs, s, 'adam')
         subs.append(sub)
