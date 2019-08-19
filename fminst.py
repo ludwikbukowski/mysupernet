@@ -21,6 +21,7 @@ from myutils import gen_save_dir
 from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
 parser.add_argument('--branch', '-d', help="branch from root", type= int, default=1)
+parser.add_argument('--branch_subs', '-d', help="branch from root", type= int, default=1)
 parser.add_argument('--trainroot', '-r', help="train root net", type= int, default=1)
 parser.add_argument('--trainsubs', '-s', help="train subs", type= int, default=1)
 parser.add_argument('--trainsuper', '-t', help="train subs", type= int, default=1)
@@ -39,6 +40,7 @@ parser.add_argument('--batch_size', '-b', help="batch_size", type= int, default=
 args = parser.parse_args()
 parameters_passed = sys.argv[1:]
 branch = args.branch
+branch_subs = args.branch_subs
 trainroot = args.trainroot
 trainsubs = args.trainsubs
 trainsuper = args.trainsuper
@@ -87,7 +89,7 @@ model.add(Dropout(0.25))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
-model.compile(loss='categorical_crossentropy', optimizer='nesterov', metrics=['acc'])
+model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['acc'])
 model.summary()
 
 ter1 = TerminateOnBaseline(monitor='val_acc', baseline=stopat1)
@@ -191,7 +193,7 @@ if(trainsubs!=0):
     subs = []
     # opts     = ['rmsprop', 'adam', 'adagrad', 'sgd', 'nadam', 'adadelta']
     for i,s in enumerate(range(n_subs)):
-        sub = define_submodel(saved, n_subs, s, 'nesterov')
+        sub = define_submodel(saved, n_subs, s, 'rmsprop')
         subs.append(sub)
 
 # plot_model(sub0, show_shapes=True, to_file='sub0.png')
@@ -290,7 +292,7 @@ def define_stacked_model(members, final_class_num):
   model = Model(inputs=ensemble_visible,  outputs=output)
   model._layers[-1].set_weights([last_layer_weights, np.mean(biases, axis = 0)])
   # below ignored for now
-  model.compile(loss='categorical_crossentropy', optimizer='nesterov', metrics=['accuracy'])
+  model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
   model.summary()
 
   return model
