@@ -319,13 +319,16 @@ if(trainsuperall!=0):
     x_test = [x_test for _ in range(len(supernet.input))]
     x_train = [x_train for _ in range(len(supernet.input))]
     csv_logger = CSVLogger(save_dir + '/history_super.csv', append=True, separator=';')
-    supernet.fit(x_train, y_train,
-                 batch_size=int(batch_size),
-                 initial_epoch=epochs2,
-                 epochs=epochs3,
-                 verbose=2,
-                 validation_data=(x_test, y_test),
-                 callbacks=[csv_logger])
-    supernet.summary()
+    scores = supernet.evaluate(x_test, y_test, verbose=1)
+    print('Test loss:', scores[0])
+    print('Test accuracy:', scores[1])
+
+    # supernet.fit(x_train, y_train,
+    #              batch_size=int(batch_size),
+    #              initial_epoch=epochs2,
+    #              epochs=epochs3,
+    #              verbose=2,
+    #              validation_data=(x_test, y_test),
+    #              callbacks=[csv_logger])
     print("SuperModel All trained")
 
