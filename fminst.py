@@ -18,6 +18,7 @@ import random
 import numpy as np
 from keras.callbacks import CSVLogger
 from myutils import gen_save_dir
+from custom_csv_logger import CustomCSVLogger
 from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
 parser.add_argument('--branch', '-d', help="branch from root", type= int, default=1)
@@ -196,15 +197,15 @@ if(trainsubs!=0):
 
 if(trainsubs !=0):
     print("-------------------------------")
-    print("Training submodels...")
+    print("Training submodels...    ")
     ter2 = TerminateOnBaseline(monitor='val_acc', baseline=stopat2)
     for i,s in enumerate(subs):
         print("-------------------------------")
         filepath_x = save_dir + "/saved-model_fminst-sub" + str(i) + "-{epoch:02d}-{val_acc:.2f}.h5"
         checkpoint_x = keras.callbacks.ModelCheckpoint(filepath_x, monitor='val_acc', verbose=2, save_best_only=False)
-        csv_logger_x = CSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', append=True, separator=';')
-        s.fit(x_train, y_train, nb_epoch=epochs2, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2,
-              initial_epoch=epochs1,
+        csv_logger_x = CustomCSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', handicap=epochs1,append=True, separator=';')
+        s.fit(x_train, y_train, nb_epoch=epochs2-epochs1, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2,
+              # initial_epoch=epochs1,
               callbacks = [ter2, csv_logger_x])
     print("Submodels trained.")
 
@@ -302,11 +303,11 @@ if(trainsuper!=0):
     supernet = define_supernet(subs, x_testing_new)
     # supernet.summary()
     ter3 = TerminateOnBaseline(monitor='val_acc', baseline=stopat3)
-    csv_logger = CSVLogger(save_dir + '/history_super.csv', append=True, separator=';')
+    csv_logger = CustomCSVLogger(save_dir + '/history_super.csv', handicap=epochs2,append=True, separator=';')
     supernet.fit(x_train_new, y_train,
               batch_size=int(batch_size),
-                 initial_epoch=epochs2,
-          epochs=epochs3,
+                 # initial_epoch=epochs2,
+          epochs=epochs3-epochs2,
           verbose=2,
           validation_data=(x_testing_new, y_test),
           callbacks=[ter3,csv_logger])
@@ -330,9 +331,8 @@ if(trainsuperall!=0):
     print('Test accuracy:', scores[1])
 
     # supernet.fit(x_train, y_train,
-    #              batch_size=int(batch_size),
-    #              initial_epoch=epochs2,
-    #              epochs=epochs3,
+    #              batch_size=int(batch_size)
+    #              epochs=epochs3-epochs2,
     #              verbose=2,
     #              validation_data=(x_test, y_test),
     #              callbacks=[csv_logger])
