@@ -80,7 +80,7 @@ print(str(input_dim))
 model = Sequential()
 model.add(Dense(258, input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.3))
-model.add(Dense(126  , activation =     "relu"))
+model.add(Dense(129  , activation =     "relu"))
 model.add(Dropout(0.2))
 model.add(Dense(nb_classes, activation = "softmax"))
 
@@ -317,8 +317,11 @@ if(trainsuper!=0):
     # print('Test loss:', scores[0])
     # print('Test accuracy:', scores[1])
 
+
+supernet = define_stacked_model(subs, 10)
+print("Supernets summary...")
+supernet.summary()
 if(trainsuperall!=0):
-    supernet = define_stacked_model(subs, 10)
     x_test = [x_test for _ in range(len(supernet.input))]
     x_train = [x_train for _ in range(len(supernet.input))]
     csv_logger = CSVLogger(save_dir + '/history_super.csv', append=True, separator=';')
