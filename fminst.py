@@ -21,7 +21,6 @@ from myutils import gen_save_dir
 from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
 parser.add_argument('--branch', '-d', help="branch from root", type= int, default=1)
-parser.add_argument('--branch_subs', '-d', help="branch from root", type= int, default=1)
 parser.add_argument('--trainroot', '-r', help="train root net", type= int, default=1)
 parser.add_argument('--trainsubs', '-s', help="train subs", type= int, default=1)
 parser.add_argument('--trainsuper', '-t', help="train subs", type= int, default=1)
@@ -40,7 +39,6 @@ parser.add_argument('--batch_size', '-b', help="batch_size", type= int, default=
 args = parser.parse_args()
 parameters_passed = sys.argv[1:]
 branch = args.branch
-branch_subs = args.branch_subs
 trainroot = args.trainroot
 trainsubs = args.trainsubs
 trainsuper = args.trainsuper
