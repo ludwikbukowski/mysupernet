@@ -100,10 +100,15 @@ saved.set_weights(model.get_weights())
 if(trainroot != 0):
     print("-------------------------------")
     print("Training Root...")
-    checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_{epoch:02d}_tmp.h5', save_best_only=False, monitor='val_acc', mode='max',
-                                 period=epochs1, verbose=1)
+
     csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
-    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = [ter1,csv_logger,checkpoint])
+    callbacks = [ter1,csv_logger]
+    if(branch!=0):
+        checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_{epoch:02d}_tmp.h5', save_best_only=False,
+                                                     monitor='val_acc', mode='max',
+                                                     period=epochs1, verbose=1)
+        callbacks.append(checkpoint)
+    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = callbacks)
     print("Root trained.")
     model.summary()
     # final_plot(hist, "tmp.png")
