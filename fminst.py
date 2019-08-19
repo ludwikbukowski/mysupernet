@@ -34,7 +34,7 @@ parser.add_argument('--stopat1', '-g', help="numer of epochs to iterate", type= 
 parser.add_argument('--stopat2', '-l', help="numer of epochs to iterate", type= float, default=0.95)
 parser.add_argument('--stopat3', '-j', help="numer of epochs to iterate", type= float, default=0.98)
 parser.add_argument('--n', '-n', help="numer of submodels?", type= int, default=3)
-parser.add_argument('--batch_size', '-b', help="batch_size", type= int, default=512)
+parser.add_argument('--batch_size', '-b', help="batch_size", type= int, default=32)
 
 args = parser.parse_args()
 parameters_passed = sys.argv[1:]
