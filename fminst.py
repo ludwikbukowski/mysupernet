@@ -79,10 +79,12 @@ supernet_part = 0.1
 
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(510 , input_dim=input_dim, activation = "relu"))
+model.add(Dense(900 , input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.3))
-model.add(Dense(258  , activation =     "relu"))
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu"))
 model.add(Dropout(0.2))
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu"))
+model.add(Dropout(0.2)) 
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
@@ -107,7 +109,7 @@ if(trainroot != 0):
                                                      monitor='val_acc', mode='max',
                                                      period=epochs1, verbose=1)
         callbacks.append(checkpoint)
-    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = callbacks)
+    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=1024 ,validation_data = (x_test, y_test), verbose=2, callbacks = callbacks)
     print("Root trained.")
     model.summary()
     # final_plot(hist, "tmp.png")
