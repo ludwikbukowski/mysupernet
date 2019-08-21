@@ -18,6 +18,7 @@ import random
 import numpy as np
 from keras.callbacks import CSVLogger
 from myutils import gen_save_dir
+from keras.regularizers import l2
 from custom_csv_logger import CustomCSVLogger
 from sklearn.model_selection import train_test_split
 parser = argparse.ArgumentParser()
@@ -76,15 +77,15 @@ root_part = 0.7
 subs_part = 0.2
 supernet_part = 0.1
 
-
+from keras import regularizers
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(900 , input_dim=input_dim, activation = "relu"))
-model.add(Dropout(0.3))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu"))
+model.add(Dense(900 , input_dim=input_dim, activation = "relu", kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
 model.add(Dropout(0.2))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu"))
-model.add(Dropout(0.2)) 
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu", kernel_regularizer=l2(0.01), bias_regularizer=l2(0.001)))
+model.add(Dropout(0.2))
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu",  kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
+model.add(Dropout(0.2))
 model.add(Dense(nb_classes, activation = "softmax"))
 
 # we'll use categorical xent for the loss, and RMSprop as the optimizer
@@ -109,7 +110,7 @@ if(trainroot != 0):
                                                      monitor='val_acc', mode='max',
                                                      period=epochs1, verbose=1)
         callbacks.append(checkpoint)
-    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=1024 ,validation_data = (x_test, y_test), verbose=2, callbacks = callbacks)
+    hist = model.fit(x_train, y_train, nb_epoch=epochs4, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2, callbacks = callbacks)
     print("Root trained.")
     model.summary()
     # final_plot(hist, "tmp.png")
@@ -137,9 +138,11 @@ def define_submodel(member, total, index, opt):
         new_w = np.array(w[start_at:end_at])
         new_weights = np.append(new_weights, new_w)
     new_weights = new_weights.reshape((inp, part))
-    densefirst = Dense(part, activation=member.layers[0].activation, input_dim=inp, weights=[new_weights, first_bias[0:part]])
+    densefirst = Dense(part, activation=member.layers[0].activation, input_dim=inp, weights=[new_weights, first_bias[0:part]],
+                       # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
+                       )
     submodel.add(densefirst)
-    submodel.add(Dropout(0.25))
+    submodel.add(Dropout(0.2))
 
     ## hidden layers
     # model.summary()
@@ -161,9 +164,11 @@ def define_submodel(member, total, index, opt):
                 new_w = np.array(w[start_at2:end_at2])
                 new_weights = np.append(new_weights, new_w)
             new_weights = new_weights.reshape((part1, part2))
-            dense = Dense(part2, activation=l.activation,weights=[new_weights, bias[start_at2:end_at2]])
+            dense = Dense(part2, activation=l.activation,weights=[new_weights, bias[start_at2:end_at2]],
+                          # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
+                          )
             submodel.add(dense)
-            submodel.add(Dropout(0.25))
+            submodel.add(Dropout(0.2))
 
     ## last layer
     last_weights, last_bias = member.layers[-1].get_weights()
