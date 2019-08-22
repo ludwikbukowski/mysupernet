@@ -80,11 +80,18 @@ supernet_part = 0.1
 from keras import regularizers
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(900 , input_dim=input_dim, activation = "relu", kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
+model.add(Dense(900 , input_dim=input_dim, activation = "relu",
+                # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
+                )
+          )
 model.add(Dropout(0.2))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu", kernel_regularizer=l2(0.01), bias_regularizer=l2(0.001)))
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu",
+                # kernel_regularizer=l2(0.01), bias_regularizer=l2(0.001)
+                ))
 model.add(Dropout(0.2))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu",  kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)))
+model.add(Dense(3000 , input_dim=input_dim, activation = "relu",
+                # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
+                ))
 model.add(Dropout(0.2))
 model.add(Dense(nb_classes, activation = "softmax"))
 
