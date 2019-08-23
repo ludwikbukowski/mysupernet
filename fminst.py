@@ -86,6 +86,7 @@ model = Sequential()
 
 # x = int(60 * factor)
 # y = int(140 * factor)
+early_stopper = keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0.001, patience=10, verbose=0, mode='auto', baseline=None, restore_best_weights=False)
 
 model.add(Dense(300 , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
@@ -118,7 +119,7 @@ if(trainroot != 0):
     print("Training Root...")
 
     csv_logger = CSVLogger(save_dir + '/history_root.csv', append=True, separator=';')
-    callbacks = [ter1,csv_logger]
+    callbacks = [ter1,csv_logger, early_stopper]
     if(branch!=0):
         checkpoint = keras.callbacks.ModelCheckpoint(filepath='fminst_{epoch:02d}_tmp.h5', save_best_only=False,
                                                      monitor='val_acc', mode='max',
