@@ -228,7 +228,7 @@ if(trainsubs !=0):
         csv_logger_x = CustomCSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', handicap=epochs1,append=True, separator=';')
         s.fit(x_train, y_train, nb_epoch=epochs2-epochs1, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2,
               # initial_epoch=epochs1,
-              callbacks = [ter2, csv_logger_x, checkpoint_x])
+              callbacks = [ter2, csv_logger_x, checkpoint_x, early_stopper])
     print("Submodels trained.")
 
 # print("-------Evaluation base model")
@@ -332,7 +332,7 @@ if(trainsuper!=0):
           epochs=epochs3-epochs2,
           verbose=2,
           validation_data=(x_testing_new, y_test),
-          callbacks=[ter3,csv_logger])
+          callbacks=[ter3,csv_logger, early_stopper])
     supernet.summary()
     print("SuperModel trained")
 
