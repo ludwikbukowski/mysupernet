@@ -37,6 +37,7 @@ parser.add_argument('--stopat2', '-l', help="numer of epochs to iterate", type= 
 parser.add_argument('--stopat3', '-j', help="numer of epochs to iterate", type= float, default=0.98)
 parser.add_argument('--n', '-n', help="numer of submodels?", type= int, default=3)
 parser.add_argument('--batch_size', '-b', help="batch_size", type= int, default=32)
+parser.add_argument('--factor', '-4', help="batch_size", type= float, default=1)
 
 args = parser.parse_args()
 parameters_passed = sys.argv[1:]
@@ -54,6 +55,7 @@ stopat1 = args.stopat1
 stopat2 = args.stopat2
 stopat3 = args.stopat3
 n_subs = args.n
+factor = args.factor
 
 batch_size = args.batch_size
 
@@ -76,20 +78,25 @@ save_dir = gen_save_dir(loc)
 root_part = 0.7
 subs_part = 0.2
 supernet_part = 0.1
-
+## 255 600 600
+# 148 348 348
 from keras import regularizers
 print(str(input_dim))
 model = Sequential()
-model.add(Dense(900 , input_dim=input_dim, activation = "relu",
+
+x = int(60 * factor)
+y = int(140 * factor)
+
+model.add(Dense(x , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
                 )
           )
 model.add(Dropout(0.2))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu",
+model.add(Dense(y , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.01), bias_regularizer=l2(0.001)
                 ))
 model.add(Dropout(0.2))
-model.add(Dense(3000 , input_dim=input_dim, activation = "relu",
+model.add(Dense(y , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
                 ))
 model.add(Dropout(0.2))
@@ -216,11 +223,11 @@ if(trainsubs !=0):
     for i,s in enumerate(subs):
         print("-------------------------------")
         filepath_x = save_dir + "/saved-model_fminst-sub" + str(i) + "-{epoch:02d}-{val_acc:.2f}.h5"
-        checkpoint_x = keras.callbacks.ModelCheckpoint(filepath_x, monitor='val_acc', verbose=2, save_best_only=False)
+        checkpoint_x = keras.callbacks.ModelCheckpoint(filepath_x, period = 20, monitor='val_acc', verbose=2, save_best_only=False)
         csv_logger_x = CustomCSVLogger(save_dir + '/history_root_sub' + str(i) + '.csv', handicap=epochs1,append=True, separator=';')
         s.fit(x_train, y_train, nb_epoch=epochs2-epochs1, batch_size=batch_size ,validation_data = (x_test, y_test), verbose=2,
               # initial_epoch=epochs1,
-              callbacks = [ter2, csv_logger_x])
+              callbacks = [ter2, csv_logger_x, checkpoint_x])
     print("Submodels trained.")
 
 # print("-------Evaluation base model")
@@ -339,16 +346,16 @@ supernet.summary()
 if(trainsuperall!=0):
     x_test = [x_test for _ in range(len(supernet.input))]
     x_train = [x_train for _ in range(len(supernet.input))]
-    csv_logger = CSVLogger(save_dir + '/history_super.csv', append=True, separator=';')
+    csv_logger = CustomCSVLogger(save_dir + '/history_super_all.csv', handicap=epochs2, append=True, separator=';')
     scores = supernet.evaluate(x_test, y_test, verbose=1)
     print('Test loss:', scores[0])
     print('Test accuracy:', scores[1])
 
-    # supernet.fit(x_train, y_train,
-    #              batch_size=int(batch_size)
-    #              epochs=epochs3-epochs2,
-    #              verbose=2,
-    #              validation_data=(x_test, y_test),
-    #              callbacks=[csv_logger])
+    supernet.fit(x_train, y_train,
+                 batch_size=int(batch_size),
+                 epochs=epochs3-epochs2,
+                 verbose=2,
+                 validation_data=(x_test, y_test),
+                 callbacks=[csv_logger])
     print("SuperModel All trained")
 
