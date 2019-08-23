@@ -84,19 +84,19 @@ from keras import regularizers
 print(str(input_dim))
 model = Sequential()
 
-x = int(60 * factor)
-y = int(140 * factor)
+# x = int(60 * factor)
+# y = int(140 * factor)
 
-model.add(Dense(x , input_dim=input_dim, activation = "relu",
+model.add(Dense(300 , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
                 )
           )
 model.add(Dropout(0.2))
-model.add(Dense(y , input_dim=input_dim, activation = "relu",
+model.add(Dense(600 , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.01), bias_regularizer=l2(0.001)
                 ))
 model.add(Dropout(0.2))
-model.add(Dense(y , input_dim=input_dim, activation = "relu",
+model.add(Dense(600 , input_dim=input_dim, activation = "relu",
                 # kernel_regularizer=l2(0.001), bias_regularizer=l2(0.001)
                 ))
 model.add(Dropout(0.2))
