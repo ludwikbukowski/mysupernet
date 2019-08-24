@@ -80,6 +80,7 @@ def train_chosen(base, x_train, x_test, y_train, y_test, index, curr_epoch):
     totrain.fit(x_train_new2, y_train,
                  batch_size=batch_size,
                  epochs=curr_epoch+epochs1,
+                 verbose=2,
                  initial_epoch=curr_epoch,
                  validation_data=(x_test_new2, y_test),
                  callbacks=[csv_logger])
